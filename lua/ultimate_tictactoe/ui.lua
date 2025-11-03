@@ -36,21 +36,21 @@ end
 function M.render_small_board(board, meta_state)
   if meta_state == "X" then
     return {
-      " X   X ",
-      "   X   ",
-      " X   X ",
+      "X   X",
+      "  X  ",
+      "X   X",
     }
   elseif meta_state == "O" then
     return {
-      "  OOO  ",
-      "  O O  ",
-      "  OOO  ",
+      " OOO ",
+      " O O ",
+      " OOO ",
     }
   elseif meta_state == "D" then
     return {
-      " ----- ",
-      " ----- ",
-      " ----- ",
+      "-----",
+      "-----",
+      "-----",
     }
   end
 
@@ -59,16 +59,21 @@ function M.render_small_board(board, meta_state)
     local line = ""
     for j = 0, 2 do
       local cell = board[i][j]
+      -- Add space separator except before first cell
+      if j > 0 then
+        line = line .. " "
+      end
+      
       if cell == "X" then
-        line = line .. " X"
+        line = line .. "X"
       elseif cell == "O" then
-        line = line .. " O"
+        line = line .. "O"
       else
         -- Use | for middle cell, - for others
         if i == 1 and j == 1 then
-          line = line .. " |"
+          line = line .. "|"
         else
-          line = line .. " -"
+          line = line .. "-"
         end
       end
     end
@@ -299,7 +304,7 @@ function M.get_cell_from_cursor(line, col)
 
   -- Determine meta col and cell col
   -- Format: "| - - - | - - - | - - - |"
-  --         01234567890123456789012345
+  --         012345678901234567890123
   -- Board 0: cols 2-6 (cells at 2, 4, 6)
   -- Board 1: cols 10-14 (cells at 10, 12, 14)
   -- Board 2: cols 18-22 (cells at 18, 20, 22)
