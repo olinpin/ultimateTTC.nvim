@@ -131,7 +131,7 @@ function M.render(bufnr, game_state, network_state)
 
   -- Render the game board
   -- Top border
-  table.insert(lines, "+----------+----------+----------+")
+  table.insert(lines, "+-------+-------+-------+")
 
   -- Render each meta row
   for meta_row = 0, 2 do
@@ -150,18 +150,18 @@ function M.render(bufnr, game_state, network_state)
 
     -- Combine small boards horizontally
     for i = 1, 3 do
-      local line = "|  " .. board_lines[i][1] .. " |  " .. board_lines[i][2] .. " |  " .. board_lines[i][3] .. " |"
+      local line = "| " .. board_lines[i][1] .. " | " .. board_lines[i][2] .. " | " .. board_lines[i][3] .. " |"
       table.insert(lines, line)
     end
 
     -- Add separator between meta rows
     if meta_row < 2 then
-      table.insert(lines, "+----------+----------+----------+")
+      table.insert(lines, "+-------+-------+-------+")
     end
   end
 
   -- Bottom border
-  table.insert(lines, "+----------+----------+----------+")
+  table.insert(lines, "+-------+-------+-------+")
 
   table.insert(lines, "")
 
@@ -251,7 +251,7 @@ function M.apply_highlights(bufnr, game_state, network_state)
       if line_idx < #lines then
         local line = lines[line_idx + 1]
         -- Calculate column range for active board
-        local start_col = 3 + meta_col * 9
+        local start_col = 2 + meta_col * 8
         local end_col = start_col + 5
 
         vim.api.nvim_buf_add_highlight(bufnr, -1, "UltimateTTTActive", line_idx, start_col, end_col)
@@ -298,25 +298,25 @@ function M.get_cell_from_cursor(line, col)
   end
 
   -- Determine meta col and cell col
-  -- Format: "|  - - - |  - - - |  - - - |"
-  --         0123456789012345678901234567
-  -- Board 0: cols 3-9 (cells at 3, 5, 7)
-  -- Board 1: cols 12-18 (cells at 12, 14, 16)
-  -- Board 2: cols 21-27 (cells at 21, 23, 25)
+  -- Format: "| - - - | - - - | - - - |"
+  --         01234567890123456789012345
+  -- Board 0: cols 2-6 (cells at 2, 4, 6)
+  -- Board 1: cols 10-14 (cells at 10, 12, 14)
+  -- Board 2: cols 18-22 (cells at 18, 20, 22)
 
   local meta_col, cell_col
 
-  if col >= 3 and col <= 9 then
+  if col >= 2 and col <= 6 then
     meta_col = 0
-    local rel_col = col - 3
+    local rel_col = col - 2
     cell_col = math.floor(rel_col / 2)
-  elseif col >= 12 and col <= 18 then
+  elseif col >= 10 and col <= 14 then
     meta_col = 1
-    local rel_col = col - 12
+    local rel_col = col - 10
     cell_col = math.floor(rel_col / 2)
-  elseif col >= 21 and col <= 27 then
+  elseif col >= 18 and col <= 22 then
     meta_col = 2
-    local rel_col = col - 21
+    local rel_col = col - 18
     cell_col = math.floor(rel_col / 2)
   else
     return nil
