@@ -144,6 +144,12 @@ function M.render(bufnr, game_state, network_state)
     local board_lines = { {}, {}, {} }
 
     for meta_col = 0, 2 do
+      -- Safety check for board structure
+      if not game_state.boards or not game_state.boards[meta_row] or not game_state.boards[meta_row][meta_col] then
+        vim.notify("Game state not properly initialized!", vim.log.levels.ERROR)
+        return
+      end
+      
       local small_board = game_state.boards[meta_row][meta_col]
       local meta_state = game_state.meta_board[meta_row][meta_col]
       local small_lines = M.render_small_board(small_board, meta_state)

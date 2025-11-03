@@ -251,13 +251,13 @@ function M.apply_remote_move(state, move_data)
     return false, "Game is already over!"
   end
 
-  -- Check if board exists and cell is valid
-  if not state.boards[meta_row] or not state.boards[meta_row][meta_col] or 
-     not state.boards[meta_row][meta_col][cell_row] then
-    return false, "Invalid board structure!"
-  end
-
-  if state.boards[meta_row][meta_col][cell_row][cell_col] then
+  -- Safely check if cell is already occupied
+  local cell_value = state.boards[meta_row] and 
+                     state.boards[meta_row][meta_col] and 
+                     state.boards[meta_row][meta_col][cell_row] and 
+                     state.boards[meta_row][meta_col][cell_row][cell_col]
+  
+  if cell_value then
     return false, "Cell is already occupied!"
   end
 

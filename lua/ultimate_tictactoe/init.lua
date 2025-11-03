@@ -112,15 +112,19 @@ function M.handle_network_message(msg)
       vim.notify("Error applying opponent's move: " .. message, vim.log.levels.ERROR)
     end
   elseif msg.type == "game_state" then
-    -- Sync full game state
-    M.current_game.boards = msg.boards
-    M.current_game.meta_board = msg.meta_board
-    M.current_game.current_player = msg.current_player
-    M.current_game.active_board = msg.active_board
-    M.current_game.game_over = msg.game_over or false
-    M.current_game.winner = msg.winner
-    render_game()
-    vim.notify("Game state synchronized", vim.log.levels.INFO)
+    -- Sync full game state - deep copy to ensure proper structure
+    if msg.boards and msg.meta_board then
+      M.current_game.boards = msg.boards
+      M.current_game.meta_board = msg.meta_board
+      M.current_game.current_player = msg.current_player
+      M.current_game.active_board = msg.active_board
+      M.current_game.game_over = msg.game_over or false
+      M.current_game.winner = msg.winner
+      render_game()
+      vim.notify("Game state synchronized", vim.log.levels.INFO)
+    else
+      vim.notify("Received invalid game state!", vim.log.levels.ERROR)
+    end
   elseif msg.type == "reset" then
     -- Handle reset request from opponent
     vim.ui.select({ "Yes", "No" }, {
@@ -184,8 +188,11 @@ function M.host_game()
       open_game_window(bufnr)
       render_game()
 
-      -- Send initial game state
-      network.send_game_state(M.current_game)
+      -- Send initial game state after a small delay to ensure client is ready
+      vim.defer_fn(function()
+        network.send_game_state(M.current_game)
+        vim.notify("Game state sent to client", vim.log.levels.INFO)
+      end, 100)
     end)
 
     if not success then
@@ -213,11 +220,12 @@ function M.join_game()
   ui.prompt_connection_details(function(ip, port)
     -- Connect to host
     local success, message = network.connect_to_host(ip, port, function()
-      -- Connected - create game as player O
+      -- Connected - create initial game as player O but wait for sync
       M.current_game = game.new("O", true)
       local bufnr = get_or_create_buffer()
       open_game_window(bufnr)
-      render_game()
+      -- Don't render yet - wait for game state from host
+      vim.notify("Connected! Waiting for game state from host...", vim.log.levels.INFO)
     end)
 
     if not success then
