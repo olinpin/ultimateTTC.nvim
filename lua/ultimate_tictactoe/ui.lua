@@ -243,16 +243,16 @@ function M.apply_highlights(bufnr, game_state, network_state)
     local meta_col = game_state.active_board[2]
 
     -- Calculate line range for active board
-    -- Board starts at line 8 (0-indexed: 7)
-    local start_line = 7 + meta_row * 4
+    -- Board starts at line 10 (0-indexed: 9)
+    local start_line = 9 + meta_row * 4
     local end_line = start_line + 3
 
     for line_idx = start_line, end_line do
       if line_idx < #lines then
         local line = lines[line_idx + 1]
         -- Calculate column range for active board
-        local start_col = 3 + meta_col * 11
-        local end_col = start_col + 6
+        local start_col = 3 + meta_col * 9
+        local end_col = start_col + 5
 
         vim.api.nvim_buf_add_highlight(bufnr, -1, "UltimateTTTActive", line_idx, start_col, end_col)
       end
@@ -265,11 +265,12 @@ end
 -- @param col number: cursor column (0-indexed)
 -- @return table: {meta_row, meta_col, cell_row, cell_col} or nil
 function M.get_cell_from_cursor(line, col)
-  -- Board starts at line 8 (1-indexed)
-  local board_start_line = 8
+  -- Board starts at line 10 (1-indexed)
+  -- Lines: 1-3=title, 4=empty, 5-7=status, 8=empty, 9=top border, 10=first board line
+  local board_start_line = 10
 
-  -- Check if cursor is within board area
-  if line < board_start_line or line > board_start_line + 11 then
+  -- Check if cursor is within board area (9 board lines + 2 separators = 11 lines)
+  if line < board_start_line or line > board_start_line + 10 then
     return nil
   end
 
@@ -298,9 +299,10 @@ function M.get_cell_from_cursor(line, col)
 
   -- Determine meta col and cell col
   -- Format: "|  - - - |  - - - |  - - - |"
+  --         0123456789012345678901234567
   -- Board 0: cols 3-9 (cells at 3, 5, 7)
-  -- Board 1: cols 14-20 (cells at 14, 16, 18)
-  -- Board 2: cols 25-31 (cells at 25, 27, 29)
+  -- Board 1: cols 12-18 (cells at 12, 14, 16)
+  -- Board 2: cols 21-27 (cells at 21, 23, 25)
 
   local meta_col, cell_col
 
@@ -308,13 +310,13 @@ function M.get_cell_from_cursor(line, col)
     meta_col = 0
     local rel_col = col - 3
     cell_col = math.floor(rel_col / 2)
-  elseif col >= 14 and col <= 20 then
+  elseif col >= 12 and col <= 18 then
     meta_col = 1
-    local rel_col = col - 14
+    local rel_col = col - 12
     cell_col = math.floor(rel_col / 2)
-  elseif col >= 25 and col <= 31 then
+  elseif col >= 21 and col <= 27 then
     meta_col = 2
-    local rel_col = col - 25
+    local rel_col = col - 21
     cell_col = math.floor(rel_col / 2)
   else
     return nil
