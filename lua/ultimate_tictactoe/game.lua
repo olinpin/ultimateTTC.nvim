@@ -233,9 +233,28 @@ function M.apply_remote_move(state, move_data)
   local cell_col = move_data.cell_col
   local player = move_data.player
 
+  -- Validate move_data (use nil check, not falsy check, since 0 is valid)
+  if meta_row == nil or meta_col == nil or cell_row == nil or cell_col == nil or not player then
+    return false, "Invalid move data received!"
+  end
+
+  -- Check bounds
+  if meta_row < 0 or meta_row > 2 or meta_col < 0 or meta_col > 2 then
+    return false, "Invalid board position!"
+  end
+  if cell_row < 0 or cell_row > 2 or cell_col < 0 or cell_col > 2 then
+    return false, "Invalid cell position!"
+  end
+
   -- Basic validation (but don't check turn)
   if state.game_over then
     return false, "Game is already over!"
+  end
+
+  -- Check if board exists and cell is valid
+  if not state.boards[meta_row] or not state.boards[meta_row][meta_col] or 
+     not state.boards[meta_row][meta_col][cell_row] then
+    return false, "Invalid board structure!"
   end
 
   if state.boards[meta_row][meta_col][cell_row][cell_col] then

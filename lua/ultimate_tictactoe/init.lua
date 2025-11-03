@@ -95,6 +95,12 @@ function M.handle_network_message(msg)
   end
 
   if msg.type == "move" then
+    -- Debug: Log received move
+    vim.notify(string.format("Received move: meta(%s,%s) cell(%s,%s) player=%s", 
+      tostring(msg.meta_row), tostring(msg.meta_col), 
+      tostring(msg.cell_row), tostring(msg.cell_col), 
+      tostring(msg.player)), vim.log.levels.DEBUG)
+    
     -- Apply opponent's move
     local success, message = game.apply_remote_move(M.current_game, msg)
     if success then
