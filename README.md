@@ -25,7 +25,7 @@ The twist: **where you play determines where your opponent must play next!** If 
 
 ```lua
 {
-  'oliverhnat/ultimateTTC-nvim',
+  'oliverhnat/ultimateTTT-nvim',
   config = function()
     require('ultimate_tictactoe').setup()
   end
@@ -36,7 +36,7 @@ The twist: **where you play determines where your opponent must play next!** If 
 
 ```lua
 use {
-  'oliverhnat/ultimateTTC-nvim',
+  'oliverhnat/ultimateTTT-nvim',
   config = function()
     require('ultimate_tictactoe').setup()
   end
@@ -46,7 +46,7 @@ use {
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
-Plug 'oliverhnat/ultimateTTC-nvim'
+Plug 'oliverhnat/ultimateTTT-nvim'
 
 " In your init.vim or init.lua:
 lua require('ultimate_tictactoe').setup()
@@ -283,7 +283,7 @@ Controls: <CR>=Move | r=Reset | q=Quit
 The plugin is structured as follows:
 
 ```
-ultimateTTC-nvim/
+ultimateTTT.nvim/
 ??? README.md
 ??? plugin/
 ?   ??? ultimate_tictactoe.lua  # Command registration
