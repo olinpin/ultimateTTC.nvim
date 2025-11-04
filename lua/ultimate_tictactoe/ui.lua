@@ -101,20 +101,26 @@ function M.render(bufnr, game_state, network_state)
 
   -- Multiplayer status and connection info
   if game_state.is_multiplayer then
-    local network_info = "Mode: Multiplayer"
+    -- Debug: Add values to see what's happening
+    local debug_info = string.format("DEBUG: is_host=%s, server=%s, is_connected=%s, host_ip=%s, host_port=%s", 
+      tostring(network_state.is_host), 
+      tostring(network_state.server ~= nil), 
+      tostring(network_state.is_connected),
+      tostring(network_state.host_ip),
+      tostring(network_state.host_port))
+    table.insert(lines, debug_info)
     
-    -- Check if we're hosting and waiting for a connection
-    if network_state.is_hosting_and_waiting() then
+    -- Check if we're hosting and waiting for a connection (direct property check)
+    if network_state.is_host and network_state.server and not network_state.is_connected then
       -- Show waiting for connection with compact IP info
-      network_info = network_info .. " | Waiting for opponent..."
-      table.insert(lines, network_info)
+      table.insert(lines, "Mode: Multiplayer | Waiting for opponent...")
       
       -- Add compact connection info
       local ip_info = network_state.host_ip or "IP not available"
       local port_info = network_state.host_port or "9999"
       table.insert(lines, string.format("Share with opponent: %s:%s", ip_info, port_info))
     elseif network_state.is_connected then
-      network_info = network_info .. " | Connected"
+      local network_info = "Mode: Multiplayer | Connected"
       if network_state.is_host then
         network_info = network_info .. " (Host)"
       else
@@ -123,15 +129,14 @@ function M.render(bufnr, game_state, network_state)
       network_info = network_info .. " | You are: " .. game_state.local_player
       table.insert(lines, network_info)
     else
-      network_info = network_info .. " | Disconnected"
-      table.insert(lines, network_info)
+      table.insert(lines, "Mode: Multiplayer | Disconnected")
     end
   else
     table.insert(lines, "Mode: Local Game")
   end
 
   -- Turn indicator
-  if game_state.is_multiplayer and network_state.is_hosting_and_waiting() then
+  if game_state.is_multiplayer and network_state.is_host and network_state.server and not network_state.is_connected then
     -- Waiting for opponent to connect
     table.insert(lines, "Waiting for opponent to connect... (moves disabled)")
   else
