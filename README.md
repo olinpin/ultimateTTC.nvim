@@ -4,20 +4,20 @@ A fully functional Neovim plugin for playing Ultimate Tic-Tac-Toe with a beautif
 
 ## What is Ultimate Tic-Tac-Toe?
 
-Ultimate Tic-Tac-Toe is a strategic variant of Tic-Tac-Toe where the game board consists of 9 regular Tic-Tac-Toe boards arranged in a 3x3 grid. Players take turns placing their marks (X or O) on any of the small boards, with the goal of winning three small boards in a row to win the game.
+Ultimate Tic-Tac-Toe is a strategic variant of classic Tic-Tac-Toe where the game board consists of 9 regular Tic-Tac-Toe boards arranged in a 3×3 grid. Players take turns placing their marks (X or O) on any of the small boards, with the goal of winning three small boards in a row to win the entire game.
 
-The twist: **where you play determines where your opponent must play next!** If you place your mark in a particular cell of a small board, your opponent must play in the corresponding small board on the meta-grid.
+**The twist:** Where you play determines where your opponent must play next! If you place your mark in a particular cell of a small board, your opponent must play in the corresponding small board on the meta-grid.
 
 ## Features
 
-- ?? **Local gameplay** - Two players on the same computer
-- ?? **Online multiplayer** - Play with friends over LAN/WiFi
-- ?? **Beautiful ASCII interface** - Clean, colorful board display
-- ? **Real-time sync** - Moves sync instantly in multiplayer
-- ?? **Full game logic** - All Ultimate Tic-Tac-Toe rules implemented
-- ?? **Intuitive controls** - Vim-style navigation and simple keybindings
-- ?? **Active board highlighting** - See where you can play at a glance
-- ?? **Win detection** - Automatic game over detection for wins and draws
+- ✓ **Local gameplay** - Two players on the same computer
+- ✓ **Online multiplayer** - Play with friends over LAN/WiFi
+- ✓ **Beautiful ASCII interface** - Clean, colorful board display
+- ✓ **Real-time sync** - Moves sync instantly in multiplayer
+- ✓ **Full game logic** - All Ultimate Tic-Tac-Toe rules implemented
+- ✓ **Intuitive controls** - Vim-style navigation and simple keybindings
+- ✓ **Active board highlighting** - See where you can play at a glance
+- ✓ **Win detection** - Automatic game over detection for wins and draws
 
 ## Installation
 
@@ -25,7 +25,7 @@ The twist: **where you play determines where your opponent must play next!** If 
 
 ```lua
 {
-  'oliverhnat/ultimateTTT-nvim',
+  'olinpin/ultimateTTT.nvim',
   config = function()
     require('ultimate_tictactoe').setup()
   end
@@ -36,7 +36,7 @@ The twist: **where you play determines where your opponent must play next!** If 
 
 ```lua
 use {
-  'oliverhnat/ultimateTTT-nvim',
+  'olinpin/ultimateTTT.nvim',
   config = function()
     require('ultimate_tictactoe').setup()
   end
@@ -46,7 +46,7 @@ use {
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
-Plug 'oliverhnat/ultimateTTT-nvim'
+Plug 'olinpin/ultimateTTT.nvim'
 
 " In your init.vim or init.lua:
 lua require('ultimate_tictactoe').setup()
@@ -284,15 +284,15 @@ The plugin is structured as follows:
 
 ```
 ultimateTTT.nvim/
-??? README.md
-??? plugin/
-?   ??? ultimate_tictactoe.lua  # Command registration
-??? lua/
-    ??? ultimate_tictactoe/
-        ??? init.lua             # Main module
-        ??? game.lua             # Game logic
-        ??? ui.lua               # Rendering
-        ??? network.lua          # Multiplayer networking
+├── README.md
+├── plugin/
+│   └── ultimate_tictactoe.lua  # Command registration
+└── lua/
+    └── ultimate_tictactoe/
+        ├── init.lua             # Main module
+        ├── game.lua             # Game logic
+        ├── ui.lua               # Rendering
+        └── network.lua          # Multiplayer networking
 ```
 
 ## Contributing
@@ -326,10 +326,10 @@ MIT License - feel free to use and modify!
 
 ## Credits
 
-Created by oliverhnat
+Created by olinpin
 
 Inspired by the strategic depth of Ultimate Tic-Tac-Toe and the power of Neovim!
 
 ---
 
-**Have fun playing! May the best strategist win! ??**
+**Have fun playing! May the best strategist win! 🎯🏆**
