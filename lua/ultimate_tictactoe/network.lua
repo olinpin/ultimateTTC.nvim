@@ -305,4 +305,10 @@ function M.is_connection_active()
   return M.is_connected
 end
 
+-- Check if we're hosting and waiting for connection
+-- @return boolean: true if hosting but no client connected
+function M.is_hosting_and_waiting()
+  return M.is_host and M.server ~= nil and not M.is_connected
+end
+
 return M

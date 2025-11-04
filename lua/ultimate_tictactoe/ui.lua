@@ -102,7 +102,18 @@ function M.render(bufnr, game_state, network_state)
   -- Multiplayer status and connection info
   if game_state.is_multiplayer then
     local network_info = "Mode: Multiplayer"
-    if network_state.is_connected then
+    
+    -- Check if we're hosting and waiting for a connection
+    if network_state.is_hosting_and_waiting() then
+      -- Show waiting for connection with compact IP info
+      network_info = network_info .. " | Waiting for opponent..."
+      table.insert(lines, network_info)
+      
+      -- Add compact connection info
+      local ip_info = network_state.host_ip or "IP not available"
+      local port_info = network_state.host_port or "9999"
+      table.insert(lines, string.format("Share with opponent: %s:%s", ip_info, port_info))
+    elseif network_state.is_connected then
       network_info = network_info .. " | Connected"
       if network_state.is_host then
         network_info = network_info .. " (Host)"
@@ -110,23 +121,9 @@ function M.render(bufnr, game_state, network_state)
         network_info = network_info .. " (Client)"
       end
       network_info = network_info .. " | You are: " .. game_state.local_player
+      table.insert(lines, network_info)
     else
-      if network_state.is_host and network_state.server then
-        -- Show waiting for connection with compact IP info
-        network_info = network_info .. " | Waiting for opponent..."
-        table.insert(lines, network_info)
-        
-        -- Add compact connection info
-        local ip_info = network_state.host_ip or "IP not available"
-        local port_info = network_state.host_port or "9999"
-        table.insert(lines, string.format("Share with opponent: %s:%s", ip_info, port_info))
-      else
-        network_info = network_info .. " | Disconnected"
-        table.insert(lines, network_info)
-      end
-    end
-    
-    if not (network_state.is_host and network_state.server and not network_state.is_connected) then
+      network_info = network_info .. " | Disconnected"
       table.insert(lines, network_info)
     end
   else
@@ -134,7 +131,7 @@ function M.render(bufnr, game_state, network_state)
   end
 
   -- Turn indicator
-  if game_state.is_multiplayer and network_state.is_host and network_state.server and not network_state.is_connected then
+  if game_state.is_multiplayer and network_state.is_hosting_and_waiting() then
     -- Waiting for opponent to connect
     table.insert(lines, "Waiting for opponent to connect... (moves disabled)")
   else
